@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Task } from '../task/task';
+import { Task } from './task';
+
 
 @Component({
   selector: 'app-task-list',
@@ -7,21 +8,16 @@ import { Task } from '../task/task';
   styleUrls: ['./task-list.component.css']
 })
 
-export class TaskListComponent implements OnInit {
+export class TaskListComponent  {
 
   tasks = [];
   task = "";
   id = 0;
-    
-  constructor() { 
-  }
-
-  ngOnInit() {
-    this.task = `Task Test`;
-  }
-
+  isAdmin: boolean = true;
+  
   add(): void {
-    let task: Task = new Task(this.id++, `${this.task} ${this.id}`);
+    let task: Task = new Task(this.id, `${this.task} ${this.id}`);
+    this.id++;
     this.tasks.push(task);
   }
 }

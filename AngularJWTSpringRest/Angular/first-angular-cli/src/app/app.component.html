@@ -1,6 +1,28 @@
-<h1>
-  {{ title }}!
-</h1>
-<br/>
+<h1>{{ title }}!</h1><br/>
 <app-task-list></app-task-list>
+<div><h3>Display data without PIPE:</h3></div>
+<div>{{user}}</div>
+<div>{{upperText}}</div>
+<div>{{lowerText}}</div>
+<div>{{percentValue}}</div>
+<div>{{date}}</div>
+<div>{{money}}</div>
+<div><h3>Display data with PIPE:</h3></div>
+<div>PIPE json: {{user | json}}</div>
+<div>PIPE uppercase: {{upperText | uppercase}}</div>
+<div>PIPE lowercase: {{lowerText | lowercase}}</div>
+<div>PIPE percent: {{percentValue | percent}}</div>
+<div>PIPE date: {{date | date : 'dd/MM/yyyy'}}</div>
+<div>PIPE currency: {{money | currency: 'BRL' }}</div>
+<div>
+    <h3>Diretives</h3>
+    <h4>ngIf = {{isAdmin2}}</h4>
+    <div *ngIf="isAdmin2">Display text: Administrator 2</div>
+    <h4>ngSwitch</h4>
+    <div [ngSwitch]="profile">
+        <p *ngSwitchCase="1">You can read & write!</p>
+        <p *ngSwitchCase="2">You can read!</p>
+        <p *ngSwitchDefault>Go back, please!</p>
+    </div>
+</div>
 
