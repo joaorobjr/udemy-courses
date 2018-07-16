@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 public class JwtUser implements UserDetails {
 	
-	private static final long serialVersionUID = 4712388259005818623L;
+	private static final long serialVersionUID = 1L;
 	
 	private final String id;
 	private final String username;
@@ -27,23 +27,12 @@ public class JwtUser implements UserDetails {
 	public String getId(){
 		return id;
 	}
-
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return authorities;
-	}
-
-	@JsonIgnore
-	@Override
-	public String getPassword() {
-		return password;
-	}
-
+	
 	@Override
 	public String getUsername() {
 		return username;
 	}
-
+	
 	@JsonIgnore
 	@Override
 	public boolean isAccountNonExpired() {
@@ -55,11 +44,22 @@ public class JwtUser implements UserDetails {
 	public boolean isAccountNonLocked() {
 		return true;
 	}
-
+	
 	@JsonIgnore
 	@Override
 	public boolean isCredentialsNonExpired() {
 		return true;
+	}
+	
+	@JsonIgnore
+	@Override
+	public String getPassword() {
+		return password;
+	}
+	
+	@Override
+	public Collection<? extends GrantedAuthority> getAuthorities() {
+		return authorities;
 	}
 
 	@Override

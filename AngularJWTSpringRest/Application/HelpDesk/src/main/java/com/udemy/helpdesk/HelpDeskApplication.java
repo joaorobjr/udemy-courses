@@ -16,7 +16,7 @@ public class HelpDeskApplication {
 	private void initUsers(UserRepository userRepository, PasswordEncoder passwordEncoder){
 		User admin = new User();
 		admin.setEmail("admin@helpdesk.com");
-		admin.setPassword("123456");
+		admin.setPassword(passwordEncoder.encode("123456"));
 		admin.setProfile(ProfileEnum.ROLE_ADMIN);
 		
 		User find = userRepository.findByEmail("admin@helpdesk.com");

@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class JwtTokenUtil implements Serializable {
 
-	private static final long serialVersionUID = 8222122513785189580L;
+	private static final long serialVersionUID = 1L;
 
 	public static final String CLAIM_KEY_USERNAME = "sub";
 	public static final String CLAIM_KEY_CREATED = "created";
