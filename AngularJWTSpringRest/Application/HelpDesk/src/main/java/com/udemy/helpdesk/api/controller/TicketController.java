@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.udemy.helpdesk.api.dto.Summary;
 import com.udemy.helpdesk.api.entity.ChangeStatus;
 import com.udemy.helpdesk.api.entity.Ticket;
 import com.udemy.helpdesk.api.entity.User;
@@ -231,7 +232,7 @@ public class TicketController {
 			@PathVariable("number") Integer number,
 			@PathVariable("title") String title,
 			@PathVariable("status") String status,
-			@PathVariable("priority") String priority,
+			@PathVariable("priority") String priority, 
 			@PathVariable("assigned") boolean assigned ){
 		
 		title = title.equals("uninformed")?"":title;
@@ -258,12 +259,111 @@ public class TicketController {
 			}else if(userRequest.getProfile().equals(ProfileEnum.ROLE_CUSTOMER)){
 				tickets = ticketService.findByParametersAndCurrentUser(page, count, title, status, priority, userRequest.getId());
 			}
-			
-			
 		}
 		
 		response.setData(tickets);
 		
 		return ResponseEntity.ok(response);	
 	}
+	
+	@PutMapping(value = "{id}/{status}")
+	@PreAuthorize("hasAnyRole('CUSTOMER', 'TECHNICIAN')")
+	public ResponseEntity<Response<Ticket>> changeStatus(@PathVariable("id") String id, @PathVariable("status") String status, HttpServletRequest request, @RequestBody Ticket ticket, BindingResult result){ 
+		
+		Response<Ticket> response = new Response<Ticket>();
+		
+		try {
+			
+			validateChangeStatus(id, status, result);
+
+			if(result.hasErrors()){
+				result.getAllErrors().forEach(error -> response.getErrors().add(error.getDefaultMessage()));
+				return ResponseEntity.badRequest().body(response);
+			}
+
+			Ticket ticketCurrent = ticketService.findById(id).get();
+			ticketCurrent.setStatus(StatusEnum.getStatus(status));
+			
+			if(status.equals("Assigned")) {
+				ticketCurrent.setAssignedUser(userFromRequest(request));
+			}
+			
+			Ticket ticketUpdated = (Ticket) ticketService.createOrUpdate(ticketCurrent);
+			
+			ChangeStatus changeStatus = new ChangeStatus();
+			changeStatus.setUserChange(userFromRequest(request));
+			changeStatus.setDateChangeStatus(new Date());
+			changeStatus.setStatus(StatusEnum.getStatus(status));
+			changeStatus.setTicket(ticketUpdated);
+			
+			ticketService.createChangeStatus(changeStatus);
+			
+			response.setData(ticketUpdated);
+			
+		} catch (Exception e) {
+			response.getErrors().add(e.getMessage());
+			return ResponseEntity.badRequest().body(response);
+		}
+		
+		return ResponseEntity.ok(response);
+	}
+	
+	private void validateChangeStatus(String id, String status, BindingResult result) {
+		
+		if(id == null || id.equals("")){
+			result.addError(new ObjectError("Ticket", "Id is required!"));
+		}
+		
+		if(status == null || status.equals("")){
+			result.addError(new ObjectError("Ticket", "Status is required!"));
+		}
+	}
+	
+	@GetMapping(value = "/summary")
+	public ResponseEntity<Response<Summary>> findSummary(){
+		
+		Response<Summary> response = new Response<Summary>();
+		
+		int amountNew = 0;
+		int amountResolved = 0;
+		int amountApproved = 0;
+		int amountDisapproved = 0;
+		int amountAssigned = 0;
+		int amountClosed = 0;
+		
+		Iterable<Ticket> tickets = ticketService.findAll();
+		Summary summary = new Summary();
+		if(tickets !=  null) {
+			
+			for (Iterator<Ticket> iterator = tickets.iterator(); iterator.hasNext();) {
+				Ticket ticket = (Ticket) iterator.next();
+				
+				if(ticket.getStatus().equals(StatusEnum.New)) {
+					amountNew++;
+				}else if(ticket.getStatus().equals(StatusEnum.Resolved)) {
+					amountResolved++;
+				}else if(ticket.getStatus().equals(StatusEnum.Approved)) {
+					amountApproved++;
+				}if(ticket.getStatus().equals(StatusEnum.Disapproved)) {
+					amountDisapproved++;
+				}if(ticket.getStatus().equals(StatusEnum.Assigned)) {
+					amountAssigned++;
+				}if(ticket.getStatus().equals(StatusEnum.Closed)) {
+					amountClosed++;
+				}
+			}
+		}
+		
+		summary.setAmountNew(amountNew);
+		summary.setAmountResolved(amountResolved);
+		summary.setAmountApproved(amountApproved);
+		summary.setAmountDisapproved(amountDisapproved);
+		summary.setAmountAssigned(amountAssigned);
+		summary.setAmountClosed(amountClosed);
+		
+		response.setData(summary);
+		
+		return ResponseEntity.ok(response);
+	}
+	
 }
