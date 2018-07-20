@@ -1,17 +1,19 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { Ticket } from '../../model/ticket.model';
 import { SharedService } from '../../services/shared/shared.service';
 import { TicketService } from '../../services/ticket/ticket.service';
 import { ResponseApi } from '../../model/response-api.model';
 
+
 @Component({
-  selector: 'app-ticket-new',
-  templateUrl: './ticket-new.component.html',
-  styleUrls: ['./ticket-new.component.css']
+  selector: 'app-ticket-detail',
+  templateUrl: './ticket-detail.component.html',
+  styleUrls: ['./ticket-detail.component.css']
 })
-export class TicketNewComponent implements OnInit {
+export class TicketDetailComponent implements OnInit {
 
   @ViewChild("form")
   form: NgForm
@@ -35,6 +37,7 @@ export class TicketNewComponent implements OnInit {
   findById(id: string) {
     this.ticketService.findById(id).subscribe((resposeApi: ResponseApi) => {
       this.ticket = resposeApi.data;
+      this.ticket.date = new Date(this.ticket.date).toISOString();
     }, error => {
       this.showMessage({
         type: 'error',
@@ -43,15 +46,13 @@ export class TicketNewComponent implements OnInit {
     });
   }
 
-  register() {
-    this.message = {};
-    this.ticketService.createOrUpdate(this.ticket).subscribe((responseApi: ResponseApi) => {
-      this.ticket = new Ticket('', null, '', '', '', '', null, null, null, null, '');
-      let ticket: Ticket = responseApi.data;
-      this.form.resetForm();
+  changeStatus(status: string): void {
+    this.ticketService.changeStatus(status, this.ticket).subscribe((resposeApi: ResponseApi)=> {
+      this.ticket = resposeApi.data;
+      this.ticket.date = new Date(this.ticket.date).toISOString();
       this.showMessage({
         type: 'success',
-        text: `Ticket ${ticket.number} created successfully!`
+        text: 'Status changed successfully'
       });
     }, error => {
       this.showMessage({
@@ -59,22 +60,6 @@ export class TicketNewComponent implements OnInit {
         text: error['error']['errors'][0]
       });
     });
-  }
-
-  onFileChange(event): void {
-    if (event.target.files[0].size > 2000000) {
-      this.showMessage({
-        type: 'error',
-        text: 'Maximum image size is 2MB'
-      });
-    } else {
-      this.ticket.image = '';
-      var reader = new FileReader();
-      reader.onloadend = (e: Event) => {
-        this.ticket.image = reader.result;
-      };
-      reader.readAsDataURL(event.target.files[0]);
-    }
   }
 
   private showMessage(message: {type: string, text: string} ): void {
@@ -100,10 +85,11 @@ export class TicketNewComponent implements OnInit {
     };
   }
 
-  cancelRegister() {
+  backToList() {
     this.ticket = new Ticket('', null, '', '', '', '', null, null, null, null, '');
     this.message = {};
     this.classCss = {};
-    this.router.navigate(['/']);
+    this.router.navigate(['/ticket-list']);
   }
+
 }

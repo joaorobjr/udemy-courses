@@ -36,10 +36,11 @@ export class TicketListComponent implements OnInit {
     this.ticketService.findAll(page, count).subscribe((responseApi: ResponseApi) => {
       this.listTicket = responseApi['data']['content'];
       this.pages = new Array(responseApi['data']['totalPages']);
-    }, error => {
+    }, err => {
+      /*console.log(err);*/
       this.showMessage({
         type: 'error',
-        text: error['error']['errors'][0]
+        text: err['error']['errors'][0]
       });
     });
   }
@@ -53,11 +54,11 @@ export class TicketListComponent implements OnInit {
       this.listTicket = responseApi['data']['content'];
       this.pages = new Array(responseApi['data']['totalPages']);
     }, err => {
-      console.log(err);
-      /*this.showMessage({
+      /*console.log(err);*/
+      this.showMessage({
         type: 'error',
         text: err['error']['errors'][0]
-      });*/
+      });
     });
   }
 
@@ -73,7 +74,7 @@ export class TicketListComponent implements OnInit {
     this.router.navigate(['/ticket-new', id]);
   }
 
-  details(id: string) {
+  detail(id: string) {
     this.router.navigate(['/ticket-detail', id]);
   }
 

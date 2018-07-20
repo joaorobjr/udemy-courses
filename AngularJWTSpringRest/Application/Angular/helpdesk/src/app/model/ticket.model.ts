@@ -10,7 +10,7 @@ export class Ticket{
         public image: string,
         public user: User,
         public assignedUser: User,
-        public date: Date,
+        public date: string,
         public changeStatus: Array<string>,
         public description: string
     ){}
