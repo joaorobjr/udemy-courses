@@ -1,5 +1,5 @@
-import { UserService } from './../../services/user.service';
-import { SharedService } from './../../services/shared.service';
+import { UserService } from './../../services/user/user.service';
+import { SharedService } from './../../services/shared/shared.service';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { User } from '../../model/user.model';
@@ -23,47 +23,47 @@ export class UserNewComponent implements OnInit {
 
   constructor(private userService: UserService, private route: ActivatedRoute, private router: Router) {
     this.shared = SharedService.getInstance();
-   }
+  }
 
   ngOnInit() {
-    let id : string = this.route.snapshot.params['id'];
-    if(id != undefined){
+    let id: string = this.route.snapshot.params['id'];
+    if (id != undefined) {
       this.findById(id);
     }
   }
 
-  findById(id: string){
-    this.userService.findById(id).subscribe((resposeApi:ResponseApi) => {
+  findById(id: string) {
+    this.userService.findById(id).subscribe((resposeApi: ResponseApi) => {
       this.user = resposeApi.data;
       this.user.password = '';
-     
+
     }, error => {
       this.showMessage({
-        type : 'error',
-        text : error['error']['errors'][0]
+        type: 'error',
+        text: error['error']['errors'][0]
       });
     });
   }
 
-  register(){
+  register() {
     this.message = {};
     this.userService.createOrUpdate(this.user).subscribe((responseApi: ResponseApi) => {
       this.user = new User('', '', '', '');
-      let userReturned : User = responseApi.data;
+      let userReturned: User = responseApi.data;
       this.form.resetForm();
       this.showMessage({
-        type : 'success',
-        text : `User '${userReturned.email}' registered successfully! `
+        type: 'success',
+        text: `User '${userReturned.email}' registered successfully! `
       });
     }, error => {
       this.showMessage({
-        type : 'error',
-        text : error['error']['errors'][0]
+        type: 'error',
+        text: error['error']['errors'][0]
       });
     });
   }
 
-  private showMessage(message: {type: string, text: string} ): void {
+  private showMessage(message: { type: string, text: string }): void {
     this.message = message;
     this.buildClasses(message.type);
     setTimeout(() => {
@@ -71,22 +71,22 @@ export class UserNewComponent implements OnInit {
     }, 3000);
   }
 
-  private buildClasses(type: string):void{
+  private buildClasses(type: string): void {
     this.classCss = {
-        'alert' : true
+      'alert': true
     }
-    this.classCss['alert-'+type] = true;
+    this.classCss['alert-' + type] = true;
   }
 
-  getFormGroupClass(isInvalid: boolean, isDirty: boolean ): {} {
-    return{
-      'form-group' : true,
-      'has-error' : isInvalid && isDirty,
-      'has-success' : !isInvalid && isDirty
+  getFormGroupClass(isInvalid: boolean, isDirty: boolean): {} {
+    return {
+      'form-group': true,
+      'has-error': isInvalid && isDirty,
+      'has-success': !isInvalid && isDirty
     };
   }
 
-  cancelRegister(){
+  cancelRegister() {
     this.user = new User('', '', '', '');
     this.message = {};
     this.classCss = {};

@@ -1,8 +1,8 @@
-import { UserService } from './../../../services/user.service';
+import { UserService } from './../../../services/user/user.service';
 import { Component, OnInit } from '@angular/core';
 import { User } from '../../../model/user.model';
 import { Router } from '@angular/router';
-import { SharedService } from '../../../services/shared.service';
+import { SharedService } from '../../../services/shared/shared.service';
 import { CurrentUser } from '../../../model/current-user.model';
 
 @Component({

@@ -1,13 +1,13 @@
-import { DialogService } from './services/dialog.service';
 import { AuthGuard } from './components/security/auth.guard';
 import { AuthInterceptor } from './components/security/auth.interceptor';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { SharedService } from './services/shared.service';
-import { UserService } from './services/user.service';
+import { SharedService } from './services/shared/shared.service';
+import { TicketService } from './services/ticket/ticket.service';
+import { UserService } from './services/user/user.service';
+import { DialogService } from './services/dialog.service';
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/header/header.component';
 import { MenuComponent } from './components/menu/menu.component';
@@ -17,6 +17,8 @@ import { LoginComponent } from './components/security/login/login.component';
 import { routes } from './app.routes';
 import { UserNewComponent } from './components/user-new/user-new.component';
 import { UserListComponent } from './components/user-list/user-list.component';
+import { TicketNewComponent } from './components/ticket-new/ticket-new.component';
+import { TicketListComponent } from './components/ticket-list/ticket-list.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,9 @@ import { UserListComponent } from './components/user-list/user-list.component';
     HomeComponent,
     LoginComponent,
     UserNewComponent,
-    UserListComponent
+    UserListComponent,
+    TicketNewComponent,
+    TicketListComponent
   ],
   imports: [
     BrowserModule,
@@ -36,7 +40,8 @@ import { UserListComponent } from './components/user-list/user-list.component';
     routes   
   ],
   providers: [
-    UserService, 
+    UserService,
+    TicketService, 
     SharedService,
     DialogService,
     AuthGuard,

@@ -28,7 +28,6 @@ import com.udemy.helpdesk.api.dto.Summary;
 import com.udemy.helpdesk.api.entity.ChangeStatus;
 import com.udemy.helpdesk.api.entity.Ticket;
 import com.udemy.helpdesk.api.entity.User;
-import com.udemy.helpdesk.api.enums.PriorityEnum;
 import com.udemy.helpdesk.api.enums.ProfileEnum;
 import com.udemy.helpdesk.api.enums.StatusEnum;
 import com.udemy.helpdesk.api.response.Response;
@@ -69,7 +68,6 @@ public class TicketController {
 			ticket.setUser(userFromRequest(request));
 			ticket.setDate(new Date());
 			ticket.setNumber(generateTicketNumber());
-			ticket.setPriority(PriorityEnum.Normal);
 			
 			Ticket ticketSaved = (Ticket) ticketService.createOrUpdate(ticket);
 			
@@ -123,9 +121,7 @@ public class TicketController {
 			ticket.setStatus(ticketCurrent.getStatus());
 			ticket.setUser(ticketCurrent.getUser());
 			ticket.setDate(ticketCurrent.getDate());
-			ticket.setNumber(ticketCurrent.getNumber());
-			ticket.setPriority(ticketCurrent.getPriority());
-			
+									
 			if(ticketCurrent.getAssignedUser() != null){
 				ticket.setAssignedUser(ticketCurrent.getAssignedUser());
 			}

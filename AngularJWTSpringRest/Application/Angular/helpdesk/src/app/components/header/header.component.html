@@ -14,7 +14,8 @@
     </a>
     <!-- Navbar Right Menu -->
     <div class="navbar-custom-menu">
-        <p style="color:white">joaorobjr@gmail.com - ADIMIN | <button>Sair</button></p>
+        <p style="color:white">{{shared.user.email}} - {{shared.user.profile}} | 
+        <button class="btn btn-link" (click)="signOut()"> <font style="color: white">Sign Out</font></button></p>
     </div>
 
   </nav>

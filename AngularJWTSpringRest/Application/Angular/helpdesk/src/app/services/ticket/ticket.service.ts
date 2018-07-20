@@ -1,7 +1,7 @@
-import { Ticket } from './../model/ticket.model';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { HELP_DESK_API, HELP_DESK_API_TICKET } from './helpdesk.api';
+import { HELP_DESK_API_TICKET } from '../helpdesk.api';
+import { Ticket } from '../../model/ticket.model';
 
 @Injectable({
   providedIn: 'root'
@@ -34,9 +34,9 @@ export class TicketService {
 
   findByParameters(page: number, count: number, assignedToMe: boolean, ticket: Ticket){
     ticket.number = ticket.number == null ? 0 : ticket.number;
-    ticket.title = ticket.title == null ? 'uninformed' : ticket.title;
-    ticket.status = ticket.status == null ? 'uninformed' : ticket.status;
-    ticket.priority = ticket.priority == null ? 'uninformed' : ticket.priority;
+    ticket.title = ticket.title == '' ? 'uninformed' : ticket.title;
+    ticket.status = ticket.status == '' ? 'uninformed' : ticket.status;
+    ticket.priority = ticket.priority == '' ? 'uninformed' : ticket.priority;
     return this.http.get(`${HELP_DESK_API_TICKET}/${page}/${count}/${ticket.number}/${ticket.title}/${ticket.status}/${ticket.priority}/${assignedToMe}`);
   }
 
