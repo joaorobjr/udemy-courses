@@ -17,7 +17,7 @@ public class Ticket {
 	@Id
 	private String id;
 	
-	@DBRef(lazy = true)
+	@DBRef(lazy = false)
 	private User user;
 	
 	private Date date;
@@ -30,7 +30,7 @@ public class Ticket {
 	
 	private PriorityEnum priority;
 	
-	@DBRef(lazy = true)
+	@DBRef(lazy = false)
 	private User assignedUser;
 	
 	private String description;
