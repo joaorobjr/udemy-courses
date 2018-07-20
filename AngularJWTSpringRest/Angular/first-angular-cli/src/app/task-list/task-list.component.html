@@ -1,0 +1,9 @@
+<input type="text" [(ngModel)]="task">
+<button type="button" (click)="add()">Add to List</button>
+<ul>
+  <li *ngFor="let item of tasks" [innerHtml]="item"></li>
+</ul>
+<div><h3>Property Bind</h3></div>
+<div>Bind property hidden from div with isAdmin property from TaskListComponent</div>
+<div [hidden]="isAdmin">Common User</div>
+<div [hidden]="!isAdmin">Administrator</div>
